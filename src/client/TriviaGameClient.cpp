@@ -3,7 +3,8 @@
 using namespace std;
 
 int main() {
-  cout << "Starting Trivia Game server..." << endl;
+  cout << "Hello player!" << endl;
 
   return 0;
 }
+
