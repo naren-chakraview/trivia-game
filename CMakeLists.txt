@@ -20,13 +20,20 @@ add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(src/include)
-file(GLOB SERVER_SOURCES "src/server/*.cpp")
 file(GLOB CLIENT_SOURCES "src/client/*.cpp")
 
-add_executable(TriviaGameServer ${SERVER_SOURCES})
+add_library(TriviaGameServerLibrary
+    src/server/Listener.cpp
+    src/server/Listener.hpp
+    src/server/RoomManager.cpp
+    src/server/RoomManager.hpp
+)
+target_include_directories(TriviaGameServerLibrary PUBLIC src/server)
 
+add_executable(TriviaGameServer src/server/TriviaGameServer.cpp)
+target_link_libraries(TriviaGameServer PRIVATE TriviaGameServerLibrary)
 target_link_libraries(TriviaGameServer PUBLIC ${Boost_SYSTEM_LIBRARY})
-target_link_libraries (TriviaGameServer ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (TriviaGameServer PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(TriviaGameClient ${CLIENT_SOURCES})
 target_link_libraries(TriviaGameClient PUBLIC ${Boost_SYSTEM_LIBRARY})
@@ -35,10 +42,14 @@ target_link_libraries (TriviaGameClient ${CMAKE_THREAD_LIBS_INIT})
 file(GLOB TEST_SOURCES "tests/*.test.cpp")
 add_executable(TriviaTests
   tests/TestMain.cpp
-  ${TEST_SOURCES})
+  ${TEST_SOURCES}
+)
+target_link_libraries(TriviaTests PRIVATE TriviaGameServerLibrary)
  
-target_include_directories(TriviaTests
-  PUBLIC externals/catch2/)
+target_include_directories(TriviaTests PUBLIC externals/catch2/)
+target_include_directories(TriviaTests PRIVATE src/include)
+target_include_directories(TriviaTests PRIVATE src/server)
+target_include_directories(TriviaTests PRIVATE src/client)
  
 add_test(
   NAME TriviaTests

@@ -12,15 +12,15 @@ int main(int argc, char* argv[])
 {
     try
     {
-        if (argc != 3) {
-          std::cerr << "Usage: TriviaGameClient <host> <port>" << std::endl;
-          return 1;
+        if (argc != 4) {
+            std::cerr << "Usage: TriviaGameClient <host> <port> <handle>" << std::endl;
+            return 1;
         }
 
         io_service ioService;
 
         ip::tcp::resolver resolver(ioService);
-	ip::tcp::resolver::query query(argv[1], argv[2]);
+        ip::tcp::resolver::query query(argv[1], argv[2]);
         ip::tcp::resolver::iterator endpoints = resolver.resolve(query);
 
         ip::tcp::socket socket(ioService);
