@@ -1,0 +1,2 @@
+const int GAME_SERVER_PORT = 12345;
+

@@ -1,3 +1,0 @@
-// the configured options and settings for TriviaGame
-#define TriviaGame_VERSION_MAJOR @TriviaGame_VERSION_MAJOR@
-#define TriviaGame_VERSION_MINOR @TriviaGame_VERSION_MINOR@
