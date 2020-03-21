@@ -13,8 +13,8 @@ class Listener {
 public:
     class Connection : public boost::enable_shared_from_this<Connection> {
     public:
-        static boost::shared_ptr<Connection> create(io_context& ioContext) {
-            return boost::shared_ptr<Connection>(new Connection(ioContext));
+        static boost::shared_ptr<Connection> create(io_service& ioService) {
+            return boost::shared_ptr<Connection>(new Connection(ioService));
         }
 
         ip::tcp::socket& socket() {
@@ -24,7 +24,7 @@ public:
         void processClient();
 
     private:
-        Connection(io_context& ioContext) : mSocket(ioContext) {
+        Connection(io_service& ioService) : mSocket(ioService) {
         }
 
         void sayHello(const boost::system::error_code&, size_t) {
@@ -44,6 +44,5 @@ private:
     unique_ptr<ip::tcp::acceptor> mAcceptor; 
     unique_ptr<ip::tcp::endpoint> mEndpoint;
     unique_ptr<io_service> mService;
-    unique_ptr<io_context> mIoContext;
     int mPort;
 };

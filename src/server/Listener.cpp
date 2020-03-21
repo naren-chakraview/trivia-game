@@ -17,7 +17,6 @@ void Listener::Connection::processClient() {
 }
 
 void Listener::listen() {
-    mIoContext = make_unique<io_context>();
     mService = make_unique<io_service>();
     mEndpoint = make_unique<ip::tcp::endpoint>(ip::tcp::v4(), mPort);
     mAcceptor = make_unique<ip::tcp::acceptor>(*mService, *mEndpoint);
@@ -30,7 +29,7 @@ void Listener::listen() {
 
 void Listener::startAccept() {
     boost::shared_ptr<Listener::Connection> connection =
-        Listener::Connection::create(*mIoContext);
+        Listener::Connection::create(*mService);
     mAcceptor->async_accept(connection->socket(),
         boost::bind(&Listener::acceptClient, this, connection,
           boost::asio::placeholders::error));
