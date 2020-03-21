@@ -16,6 +16,7 @@ message(STATUS "Boost version: ${Boost_VERSION}")
 find_package(Threads)
 
 add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
+add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(src/include)

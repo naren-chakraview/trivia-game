@@ -17,12 +17,13 @@ int main(int argc, char* argv[])
           return 1;
         }
 
-        io_context ioContext;
+        io_service ioService;
 
-        ip::tcp::resolver resolver(ioContext);
-        ip::tcp::resolver::results_type endpoints = resolver.resolve(argv[1], argv[2]);
+        ip::tcp::resolver resolver(ioService);
+	ip::tcp::resolver::query query(argv[1], argv[2]);
+        ip::tcp::resolver::iterator endpoints = resolver.resolve(query);
 
-        ip::tcp::socket socket(ioContext);
+        ip::tcp::socket socket(ioService);
         connect(socket, endpoints);
 
         while (true) {
