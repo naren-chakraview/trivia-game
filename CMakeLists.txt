@@ -15,6 +15,8 @@ find_package(Boost REQUIRED)
 message(STATUS "Boost version: ${Boost_VERSION}")
 find_package(Threads)
 
+add_definitions(-DBOOST_ERROR_CODE_HEADER_ONLY)
+
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(src/include)
 file(GLOB SERVER_SOURCES "src/server/*.cpp")
