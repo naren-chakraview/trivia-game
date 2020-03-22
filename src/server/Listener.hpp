@@ -1,3 +1,6 @@
+#ifndef __TRIVIA_GAME_SERVER_LISTENER__
+#define __TRIVIA_GAME_SERVER_LISTENER__
+
 #include <iostream>
 #include <memory>
 
@@ -46,3 +49,5 @@ private:
     unique_ptr<io_service> mService;
     int mPort;
 };
+
+#endif // __TRIVIA_GAME_SERVER_LISTENER__

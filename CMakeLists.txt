@@ -20,7 +20,6 @@ add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
 
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(src/include)
-file(GLOB CLIENT_SOURCES "src/client/*.cpp")
 
 add_library(TriviaGameServerLibrary
     src/server/Listener.cpp
@@ -35,6 +34,7 @@ target_link_libraries(TriviaGameServer PRIVATE TriviaGameServerLibrary)
 target_link_libraries(TriviaGameServer PUBLIC ${Boost_SYSTEM_LIBRARY})
 target_link_libraries (TriviaGameServer PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
+file(GLOB CLIENT_SOURCES "src/client/*.cpp")
 add_executable(TriviaGameClient ${CLIENT_SOURCES})
 target_link_libraries(TriviaGameClient PUBLIC ${Boost_SYSTEM_LIBRARY})
 target_link_libraries (TriviaGameClient ${CMAKE_THREAD_LIBS_INIT})
@@ -53,7 +53,7 @@ target_include_directories(TriviaTests PRIVATE src/client)
  
 add_test(
   NAME TriviaTests
-  COMMAND TriviaTests -o test_report.xml -r junit)
+  COMMAND TriviaTests -o test_report.txt)
 
 enable_testing()
 

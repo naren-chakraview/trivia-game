@@ -21,11 +21,23 @@ well as relevant game rules.
 - Multiple games can be in progress
 - Users can join at any time
 
-## Preliminary design
+## Design
 ---
-The following diagrams capture the ideas for a preliminary design.
+The design for the Trivia Game is described in the [docs](docs/README.md)
 
-![Server State Diagram 1](docs/state_dia_1.png)
-![Server State Diagram 2](docs/state_dia_2.png)
-![Client State Diagram](docs/state_dia_3.png)
+## Build instructions
+---
+The prerequsites for this project are a cmake aware C++ tool chain and boost
+STL library of version >= 1.65.
+
+```
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make TriviaGameServer TriviaGameClient TriviaTests
+$ make test
+```
+
+The test results are captured in JUnit style report (test_report.xml) in the
+build folder.
 
