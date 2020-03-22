@@ -8,7 +8,7 @@ TCP messages passed between Client and server.
 ---
 The following diagrams capture the ideas for a preliminary design.
 
-![Server State Diagram 1](docs/state_dia_1.png)
-![Server State Diagram 2](docs/state_dia_2.png)
-![Client State Diagram](docs/state_dia_3.png)
+![Server State Diagram 1](state_dia_1.png)
+![Server State Diagram 2](state_dia_2.png)
+![Client State Diagram](state_dia_3.png)
 
