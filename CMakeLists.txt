@@ -37,13 +37,14 @@ target_link_libraries (TriviaGameServer PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 file(GLOB CLIENT_SOURCES "src/client/*.cpp")
 add_executable(TriviaGameClient ${CLIENT_SOURCES})
 target_link_libraries(TriviaGameClient PUBLIC ${Boost_SYSTEM_LIBRARY})
-target_link_libraries (TriviaGameClient ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (TriviaGameClient PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 
 file(GLOB TEST_SOURCES "tests/*.test.cpp")
 add_executable(TriviaTests
   tests/TestMain.cpp
   ${TEST_SOURCES}
 )
+target_link_libraries (TriviaTests PUBLIC ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(TriviaTests PRIVATE TriviaGameServerLibrary)
  
 target_include_directories(TriviaTests PUBLIC externals/catch2/)
