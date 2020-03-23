@@ -12,6 +12,7 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/bind.hpp>
 
+#include "TriviaGameConfig.h"
 #include "Room.hpp"
 #include "User.hpp"
 
@@ -19,14 +20,12 @@ using namespace std;
 
 class RoomManager : public boost::enable_shared_from_this<RoomManager> {
 public:
-    static boost::shared_ptr<RoomManager> create(int maxCapacity, int maxWait) {
+    static boost::shared_ptr<RoomManager> get(
+            int maxCapacity = MAX_ROOM_CAPACITY,
+            int maxWait = MAX_ROOM_WAIT) {
         if (!manager) {
             manager = boost::make_shared<RoomManager>(RoomManager(maxCapacity, maxWait));
         }
-        return manager;
-    }
-
-    static boost::shared_ptr<RoomManager> get() {
         return manager;
     }
 
@@ -40,7 +39,7 @@ public:
 
     void activateRoom();
 
-    void addUser(User& user);
+    void addUser(boost::shared_ptr<User> user);
 
     int roomCount() {
         return mActiveRooms.size() + (mRoom == nullptr ? 0 : 1);

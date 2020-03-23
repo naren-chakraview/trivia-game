@@ -1,7 +1,6 @@
 #include <boost/date_time/posix_time/posix_time_duration.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared_array.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 #include "RoomManager.hpp"
 
@@ -21,7 +20,7 @@ void RoomManager::cleanupRooms() {
 
 void RoomManager::createNewRoomIfNeeded() {
     if (!mRoom) {
-        mRoom = boost::make_shared<Room>(Room());
+        mRoom = Room::create();
 
         // start timer on room
         mTimer.expires_from_now(boost::posix_time::seconds(mWait));
@@ -36,7 +35,7 @@ void RoomManager::activateRoom() {
     cleanupRooms();
 }
 
-void RoomManager::addUser(User& user) {
+void RoomManager::addUser(boost::shared_ptr<User> user) {
     createNewRoomIfNeeded();
 
     mRoom->addUser(user);

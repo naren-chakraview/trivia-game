@@ -11,7 +11,7 @@ using namespace std::chrono;
 
 SCENARIO("Room manager is initialized") {
     GIVEN("A Room Manager with some capacity settings") {
-        boost::shared_ptr<RoomManager> rm = RoomManager::create(2, 3);
+        boost::shared_ptr<RoomManager> rm = RoomManager::get(2, 3);
 
         REQUIRE(rm->capacity() == 2);
         REQUIRE(rm->waitTime() == 3);
@@ -19,7 +19,7 @@ SCENARIO("Room manager is initialized") {
         REQUIRE(rm->activeRoomCount() == 0);
 
         WHEN("Try to create a new room manager with other settings") {
-            auto newRM = RoomManager::create(300, 45);
+            auto newRM = RoomManager::get(300, 45);
 
             THEN("The old settings still hold") {
                 REQUIRE(newRM->capacity() == 2);
@@ -32,12 +32,12 @@ SCENARIO("Room manager is initialized") {
 
 SCENARIO("Room manager room management w.r.t. capacity") {
     GIVEN("A Room with fixed small capacity") {
-        boost::shared_ptr<RoomManager> rm = RoomManager::create(2, 30);
+        boost::shared_ptr<RoomManager> rm = RoomManager::get(2, 30);
 
         REQUIRE(rm->capacity() == 2);
 
         WHEN("Adding users within capacity") {
-            User u1;
+            boost::shared_ptr<User> u1 = User::create("u1", nullptr);
             rm->addUser(u1);
 
             THEN("Room count goes up, but active rooms remains same") {
@@ -47,7 +47,7 @@ SCENARIO("Room manager room management w.r.t. capacity") {
         }
 
         WHEN("Adding users at capacity") {
-            User u2;
+            boost::shared_ptr<User> u2 = User::create("u2", nullptr);
             rm->addUser(u2);
 
             THEN("Room count goes up, and active room count goes up") {
@@ -57,7 +57,7 @@ SCENARIO("Room manager room management w.r.t. capacity") {
         }
 
         WHEN("Adding users more than capacity") {
-            User u3;
+            boost::shared_ptr<User> u3 = User::create("u3", nullptr);
             rm->addUser(u3);
 
             THEN("Room count goes up, but active rooms remains same") {
@@ -70,13 +70,13 @@ SCENARIO("Room manager room management w.r.t. capacity") {
 
 SCENARIO("Room manager room management w.r.t. wait time") {
     GIVEN("A Room with ample capacity and slow incoming clients") {
-        boost::shared_ptr<RoomManager> rm = RoomManager::create(50, 3);
+        boost::shared_ptr<RoomManager> rm = RoomManager::get(2, 3);
 
         REQUIRE(rm->capacity() == 2);
         REQUIRE(rm->waitTime() == 3);
 
         WHEN("Adding users within capacity and without exceeding max wait") {
-            User u1;
+            boost::shared_ptr<User> u1 = User::create("u1", nullptr);
             rm->addUser(u1);
 
             THEN("Room count goes up, but active rooms remains same") {
@@ -86,7 +86,8 @@ SCENARIO("Room manager room management w.r.t. wait time") {
         }
 
         WHEN("Adding users after than capacity") {
-            User u2, u3;
+            boost::shared_ptr<User> u2 = User::create("u2", nullptr);
+            boost::shared_ptr<User> u3 = User::create("u3", nullptr);
             rm->addUser(u2);
 
             std::this_thread::sleep_for(seconds(3));
@@ -100,3 +101,8 @@ SCENARIO("Room manager room management w.r.t. wait time") {
         }
     }
 };
+
+SCENARIO("Room manager cleaning up") {
+    GIVEN("A few rooms in various states of activity, clean up") {
+    }
+}

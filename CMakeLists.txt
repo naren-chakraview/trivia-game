@@ -26,6 +26,12 @@ add_library(TriviaGameServerLibrary
     src/server/Listener.hpp
     src/server/RoomManager.cpp
     src/server/RoomManager.hpp
+    src/server/Room.cpp
+    src/server/Room.hpp
+    src/server/User.cpp
+    src/server/User.hpp
+    src/server/GameManager.cpp
+    src/server/GameManager.hpp
 )
 target_include_directories(TriviaGameServerLibrary PUBLIC src/server)
 

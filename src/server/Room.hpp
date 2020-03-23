@@ -5,16 +5,20 @@
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 #include "User.hpp"
+#include "GameManager.hpp"
 
 using namespace std;
 
-class Room {
+class Room : public boost::enable_shared_from_this<Room> {
 public:
-    Room() : mActive(false) {}
+    static boost::shared_ptr<Room> create() {
+        return boost::shared_ptr<Room>(new Room());
+    }
 
-    void addUser(User& user) {
+    void addUser(boost::shared_ptr<User> user) {
         if (!active()) {
             mUsers.push_back(user);
         }
@@ -30,6 +34,7 @@ public:
 
     void activate() {
         mActive = true;
+        mGameManager->startGame(mUsers, shared_from_this());
     }
 
     void deactivate() {
@@ -37,9 +42,15 @@ public:
     }
 
 private:
+    Room() : mActive(false) {
+        mGameManager = GameManager::create();
+    }
+
     bool mActive;
 
-    vector<User> mUsers;
+    vector<boost::shared_ptr<User>> mUsers;
+    boost::shared_ptr<GameManager> mGameManager;
+    boost::shared_ptr<Room> mThis;
 };
 
 #endif // __TRIVIA_GAME_SERVER_ROOM__
