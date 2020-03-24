@@ -32,6 +32,8 @@ add_library(TriviaGameServerLibrary
     src/server/User.hpp
     src/server/GameManager.cpp
     src/server/GameManager.hpp
+    src/server/TriviaDB.cpp
+    src/server/TriviaDB.hpp
 )
 target_include_directories(TriviaGameServerLibrary PUBLIC src/server)
 

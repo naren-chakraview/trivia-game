@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
             if (message.rfind("Goodbye") == 0) {
                 break;
             }
-            if (message.rfind("Question:") == 0) {
+            if (message.rfind("question:") == 0) {
                 // ask question and wait for response
                 cout << message << endl;
 

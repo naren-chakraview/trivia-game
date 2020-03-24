@@ -13,4 +13,7 @@ const int MAX_ROUNDS = 3;
 const int MAX_QUESTIONS = 10;
 const int MAX_TIME_PER_QUESTION = 10; // seconds
 
+// trivia db config
+const char TRIVIA_DB_LOCATION[] = "../db/triviadb.json";
+
 #endif // __TRIVIA_GAME_SERVER_CONFIG__
