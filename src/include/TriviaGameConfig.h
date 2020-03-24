@@ -12,6 +12,8 @@ const int MAX_ROOM_WAIT = 30; // seconds
 const int MAX_ROUNDS = 3;
 const int MAX_QUESTIONS = 10;
 const int MAX_TIME_PER_QUESTION = 10; // seconds
+const int ROUND_NUMBERS[] = { 1, 2, 3 }; // round identifiers
+const int ROUND_WINNERS[] = { 20, 5, 1 }; // number of winners at end of round
 
 // trivia db config
 const char TRIVIA_DB_LOCATION[] = "../db/triviadb.json";

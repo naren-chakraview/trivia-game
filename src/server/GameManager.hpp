@@ -1,15 +1,14 @@
 #ifndef __TRIVIA_GAME_SERVER_GAME_MANAGER__
 #define __TRIVIA_GAME_SERVER_GAME_MANAGER__
 
-#include <boost/smart_ptr/shared_ptr.hpp>
 #include <vector>
+#include <map>
 
 #include <boost/shared_ptr.hpp>
 
 #include "TriviaGameConfig.h"
 #include "User.hpp"
-
-using namespace std;
+#include "TriviaDB.hpp"
 
 class Room; //forward decl
 
@@ -27,9 +26,24 @@ private:
         mMaxQuestionsPerRound(MAX_QUESTIONS),
         mMaxTimePerQuestion(MAX_TIME_PER_QUESTION) {}
 
+    void wait(int seconds);
+    std::string getIntroduction();
+    void broadcastMessage(std::vector<boost::shared_ptr<User>>& users, std::string message);
+    void harvestAnswersAndUpdateStatistics(std::vector<boost::shared_ptr<User>>& users,
+            TriviaDB::Question& question, int questionNumber);
+    void executeRound(std::vector<boost::shared_ptr<User>>& users, int round);
+    void broadcastStatistics(std::vector<boost::shared_ptr<User>>& users, int round);
+    void deactivateUsersWhoLost(std::vector<boost::shared_ptr<User>>& users, int round);
+    void resetStats(std::vector<boost::shared_ptr<User>>& users);
+
     int mMaxRounds;
     int mMaxQuestionsPerRound;
     int mMaxTimePerQuestion; //seconds
+
+    // per round statistics; gets reset every round
+    std::map<std::string, boost::shared_ptr<User>> mUsersPerRound;
+    int mCorrectAnswerPerQuestion[MAX_QUESTIONS];
+    std::map<std::string, int> mUserScores;
 };
 
 #endif // __TRIVIA_GAME_SERVER_GAME_MANAGER__

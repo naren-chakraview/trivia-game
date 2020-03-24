@@ -16,8 +16,6 @@
 #include "Room.hpp"
 #include "User.hpp"
 
-using namespace std;
-
 class RoomManager : public boost::enable_shared_from_this<RoomManager> {
 public:
     static boost::shared_ptr<RoomManager> get(
@@ -35,7 +33,7 @@ public:
 
     void cleanupRooms();
 
-    void createNewRoomIfNeeded();
+    void createNewRoomIfNeeded(boost::asio::io_service& service);
 
     void activateRoom();
 
@@ -56,18 +54,16 @@ public:
 private:
     RoomManager(int maxCapacity, int maxWait) : 
         mCapacity(maxCapacity),
-        mWait(maxWait),
-        mTimer(RoomManager::service) {}
+        mWait(maxWait) {}
 
     int mCapacity;
     int mWait;
     
     boost::shared_ptr<Room> mRoom;
-    list<boost::shared_ptr<Room>> mActiveRooms;
-    boost::asio::deadline_timer mTimer;
+    std::list<boost::shared_ptr<Room>> mActiveRooms;
+    boost::shared_ptr<boost::asio::deadline_timer> mTimer;
 
     static boost::shared_ptr<RoomManager> manager;
-    static boost::asio::io_service service;
 };
 
 #endif // __TRIVIA_GAME_SERVER_ROOM_MANAGER__

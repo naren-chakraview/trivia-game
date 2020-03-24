@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <boost/asio.hpp>
+#include <boost/array.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -23,6 +24,10 @@ public:
         ip::tcp::socket& socket() {
             return mSocket;
         }
+        
+        string readMessage();
+
+        void sendMessage(string message);
 
         void processClient();
 
@@ -30,15 +35,26 @@ public:
         Connection(io_service& ioService) : mSocket(ioService) {
         }
 
-        void sayHello(const boost::system::error_code&, size_t) {
+        void handleWriteError(const boost::system::error_code&, size_t) {
+        }
+
+        void handleRead(const boost::system::error_code& error, size_t len) {
+            mAnswer = "";
+            if (!error) {
+                mAnswer = string(mBuf.data(), len);
+                cout << "got answer " << mAnswer << endl;
+            }
         }
 
         ip::tcp::socket mSocket;
+        boost::array<char, 1> mBuf; // 1 character answers expected!!
+        std::string mAnswer;
     };
 
     void listen();
 
-    Listener(int port) :mPort(port) {};
+    Listener(boost::asio::io_service& service, int port)
+        : mService(service), mPort(port) {};
 
 private:
     void startAccept();
@@ -46,7 +62,7 @@ private:
 
     unique_ptr<ip::tcp::acceptor> mAcceptor; 
     unique_ptr<ip::tcp::endpoint> mEndpoint;
-    unique_ptr<io_service> mService;
+    boost::asio::io_service& mService;
     int mPort;
 };
 

@@ -13,6 +13,10 @@
 using namespace std;
 using namespace boost::asio;
 
+string Listener::Connection::readMessage() {
+    return mAnswer;
+}
+
 void Listener::Connection::processClient() {
     boost::array<char, 255> buf;
     boost::system::error_code error;
@@ -34,30 +38,40 @@ void Listener::Connection::processClient() {
     cout << "Player " << userName << " joined. Added to waiting room."  << endl;
 
     string greeting = "Hello: Welcome, " + userName + "! The game will start shortly\n";
-    async_write(mSocket, buffer(greeting),
-        boost::bind(&Listener::Connection::sayHello, shared_from_this(),
+
+    sendMessage(greeting);
+}
+
+void Listener::Connection::sendMessage(string message) {
+    async_write(mSocket, buffer(message),
+        boost::bind(&Listener::Connection::handleWriteError, shared_from_this(),
           boost::asio::placeholders::error,
           boost::asio::placeholders::bytes_transferred));
+
+    if (message.rfind("question:") == 0) {
+        // sent out a question, so wait for a response
+        async_read(mSocket, buffer(mBuf),
+        boost::bind(&Listener::Connection::handleRead, shared_from_this(),
+          boost::asio::placeholders::error,
+          boost::asio::placeholders::bytes_transferred));
+    }
 }
 
 void Listener::listen() {
-    mService = make_unique<io_service>();
     mEndpoint = make_unique<ip::tcp::endpoint>(ip::tcp::v4(), mPort);
-    mAcceptor = make_unique<ip::tcp::acceptor>(*mService, *mEndpoint);
+    mAcceptor = make_unique<ip::tcp::acceptor>(mService, *mEndpoint);
     cout << "Listening on port " << mPort << "..." << endl;
 
     startAccept();
-
-    mService->run();
 }
 
 void Listener::startAccept() {
     boost::shared_ptr<Listener::Connection> connection =
-        Listener::Connection::create(*mService);
+        Listener::Connection::create(mService);
+
     mAcceptor->async_accept(connection->socket(),
         boost::bind(&Listener::acceptClient, this, connection,
           boost::asio::placeholders::error));
-
 }
 
 void Listener::acceptClient(boost::shared_ptr<Listener::Connection> connection,

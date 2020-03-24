@@ -1,8 +1,9 @@
-#include <boost/system/error_code.hpp>
 #include <iostream>
+#include <algorithm>
 
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
+#include <boost/system/error_code.hpp>
 
 #include "TriviaGameConfig.h"
 
@@ -32,7 +33,10 @@ int main(int argc, char* argv[])
         write(socket, buffer(userName), error); // send user name
 
         while (true) {
-            boost::array<char, 128> buf;
+            boost::array<char, 5000> buf;
+
+            fill(buf.begin(), buf.end(), 0);
+
             boost::system::error_code error;
 
             size_t len = socket.read_some(boost::asio::buffer(buf), error);
@@ -42,21 +46,26 @@ int main(int argc, char* argv[])
             else if (error)
                 throw boost::system::system_error(error); // Some other error.
 
-            string message(buf.data());
+            string message(buf.data(), len);
 
+            cout << message << endl;
             if (message.rfind("Goodbye") == 0) {
                 break;
             }
             if (message.rfind("question:") == 0) {
-                // ask question and wait for response
-                cout << message << endl;
-
+                // question was asked; wait for response
                 string answer;
                 getline(cin, answer); // hmm.. sync wait unfortunately
 
                 write(socket, buffer(answer), error);
+
+                /* if (!error) { */
+                /*     cout << "Answer " << answer << " sent." << endl; */
+                /* } */
+                /* else { */
+                /*     cout << "Error sending answer - " << error.message() << endl; */
+                /* } */
             }
-            cout << message << endl;
         }
     }
     catch (std::exception& e) {

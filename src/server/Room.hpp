@@ -10,8 +10,6 @@
 #include "User.hpp"
 #include "GameManager.hpp"
 
-using namespace std;
-
 class Room : public boost::enable_shared_from_this<Room> {
 public:
     static boost::shared_ptr<Room> create() {
@@ -48,7 +46,7 @@ private:
 
     bool mActive;
 
-    vector<boost::shared_ptr<User>> mUsers;
+    std::vector<boost::shared_ptr<User>> mUsers;
     boost::shared_ptr<GameManager> mGameManager;
     boost::shared_ptr<Room> mThis;
 };

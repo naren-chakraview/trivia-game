@@ -8,8 +8,12 @@ int main() {
   cout << "Starting Trivia Game server..." << endl;
 
   try {
-      Listener listener(GAME_SERVER_PORT);
+      boost::asio::io_service ioService;
+
+      Listener listener(ioService, GAME_SERVER_PORT);
       listener.listen();
+
+      ioService.run();
   }
   catch (exception& e) {
       cerr << e.what() << endl;

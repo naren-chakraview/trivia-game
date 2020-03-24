@@ -43,7 +43,25 @@ void TriviaDB::loadDB() {
             mQuestions.push_back(question);
         }
 
+        mIter = mQuestions.begin();
         cout << "loaded " << mQuestions.size() << " questions from the database" << endl;
     }
+}
+
+// simplistic iterator over questions
+// will be significantly more involved when there is a more elaborate db
+TriviaDB::Question TriviaDB::getNextQuestion() {
+    // The TriviaDB is a singleton.
+    // Simplistic synchronized block of code to protect the integrity of the
+    // db object and the questions vector
+    lock_guard<std::mutex> guard(mMutex);
+
+    loadDB(); // lazy load (will do only once)
+
+    if (mIter == mQuestions.end()) {
+        mIter = mQuestions.begin(); // just recycle
+    }
+
+    return *mIter++;
 }
 

@@ -41,3 +41,14 @@ $ make test
 The test results are captured in JUnit style report (test_report.xml) in the
 build folder.
 
+## State of project
+---
+The game server does a good job of managing users, but it has a few remaining
+issues. The main issues are -
+
+1. The game client does not time out after 10 seconds for the questions. It
+   has a blocking terminal read method.
+2. The game server for some reason is getting all the user responses after the
+   results have been computed and everyone marked as lost because of 0 scores.
+3. The game server has some blocking synchronous code despite efforts to design
+   a clean asynchronous execution without using a multi-threaded approach.

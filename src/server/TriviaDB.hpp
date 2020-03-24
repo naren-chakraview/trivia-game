@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -21,10 +22,12 @@ public:
 
     static boost::shared_ptr<TriviaDB> get() {
         if (!db) {
-            db = boost::make_shared<TriviaDB>(TriviaDB());
+            db = boost::shared_ptr<TriviaDB>(new TriviaDB());
         }
         return db;
     }
+
+    Question getNextQuestion();
 
 private:
     TriviaDB(string location = TRIVIA_DB_LOCATION) :
@@ -34,6 +37,8 @@ private:
 
     string mLocation;
     vector<Question> mQuestions;
+    vector<Question>::iterator mIter;
+    mutex mMutex;
 
     static boost::shared_ptr<TriviaDB> db;
 };
