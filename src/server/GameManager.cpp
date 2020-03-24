@@ -137,12 +137,14 @@ void GameManager::resetStats(vector<boost::shared_ptr<User>>& users) {
 }
 
 void GameManager::startGame(vector<boost::shared_ptr<User>>& users, boost::shared_ptr<Room> room) {
+    resetStats(users);
+    if (mUsersPerRound.size() == 0) return; // no active users
+
     cout << "Starting game for " << users.size() << " players" << endl;
 
     broadcastMessage(users, getIntroduction());
     wait(3);
 
-    resetStats(users);
     for (int round = 0; round < MAX_ROUNDS; round++) {
         executeRound(users, round);
         broadcastStatistics(users, round);

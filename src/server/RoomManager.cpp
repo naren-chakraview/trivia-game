@@ -52,7 +52,12 @@ void RoomManager::activateRoom() {
 }
 
 void RoomManager::addUser(boost::shared_ptr<User> user) {
-    createNewRoomIfNeeded(user->connection()->socket().get_io_service());
+    io_service testService; // if user connection is lost, use temp
+
+    io_service& service = (user == nullptr || user->connection() == nullptr) ?
+        testService : user->connection()->socket().get_io_service();
+
+    createNewRoomIfNeeded(service);
 
     mRoom->addUser(user);
 
