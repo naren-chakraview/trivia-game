@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <functional>
 #include <chrono>
+#include <thread>
 
 #include <boost/shared_ptr.hpp>
 
@@ -16,7 +17,7 @@
 using namespace std;
 
 void GameManager::wait(int secs) {
-    this_thread::sleep_for(std::chrono::seconds(secs));
+	std::this_thread::sleep_for(std::chrono::seconds(secs));
 }
 
 void GameManager::broadcastMessage(vector<boost::shared_ptr<User>>& users, string message) {
