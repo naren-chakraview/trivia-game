@@ -6,6 +6,7 @@
 #include <functional>
 #include <chrono>
 #include <thread>
+#include <future>
 
 #include <boost/shared_ptr.hpp>
 
@@ -17,7 +18,16 @@
 using namespace std;
 
 void GameManager::wait(int secs) {
-	std::this_thread::sleep_for(std::chrono::seconds(secs));
+	/* std::this_thread::sleep_for(std::chrono::seconds(secs)); */
+    std::future<void> future = std::async(std::launch::async, [](int secs){
+        std::this_thread::sleep_for(std::chrono::seconds(secs));
+    }, secs);
+
+    std::cout << "waiting " << secs << " seconds...\n";
+    std::future_status status;
+    do {
+        status = future.wait_for(std::chrono::seconds(1));
+    } while (status != std::future_status::ready);
 }
 
 void GameManager::broadcastMessage(vector<boost::shared_ptr<User>>& users, string message) {
